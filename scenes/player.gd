@@ -9,9 +9,17 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 
 func _physics_process(delta):
+	print("idle")
+	if velocity.x > 1 || velocity.x < -1:
+		$AnimatedSprite2D.animation = "running"
+		print("running")
+	else:
+		$AnimatedSprite2D.animation = "idle"
+		print("idle")
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * delta
+		$AnimatedSprite2D.animation = "jumping"
 
 	# Handle jump.
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
@@ -26,3 +34,5 @@ func _physics_process(delta):
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
 	move_and_slide()
+	var is_left = velocity.x < 0
+	$AnimatedSprite2D.flip_h = is_left
